@@ -1,14 +1,16 @@
 import http from 'http';
 import app from './app';
+import dotenv from 'dotenv';
 
 const server = http.createServer(app);
 
-const TEMP_PORT = 8000;
+dotenv.config();
+const { PORT } = process.env;
 
 const start = async () => {
   try {
-    server.listen(TEMP_PORT, () => {
-      console.log(`MRDR 백엔드 서버가 ${TEMP_PORT}번 포트에서 시작되었습니다.`);
+    server.listen(PORT, () => {
+      console.log(`MRDR 백엔드 서버가 ${PORT}번 포트에서 시작되었습니다.`);
     });
   } catch (error) {
     console.error(error);
