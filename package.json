@@ -1,0 +1,37 @@
+{
+  "name": "mrdr-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend/issues"
+  },
+  "homepage": "https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend#readme",
+  "dependencies": {
+    "@prisma/client": "^3.1.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.13",
+    "prettier": "2.4.1",
+    "prisma": "^3.1.1"
+  }
+}
