@@ -39,15 +39,16 @@ model SubCategory {
 }
 
 model Product {
-  id            Int         @id @default(autoincrement())
-  name          String
-  price         Float
-  salePrice     Float?      @map("sale_price")
-  isRecommended Boolean     @default(false) @map("is_recommended")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at")
-  subCategoryId Int         @map("sub_category_id")
-  SubCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
+  id             Int         @id @default(autoincrement())
+  name           String
+  price          Float
+  salePrice      Float?      @map("sale_price")
+  detailImageUrl String      @map("detail_image_url") @db.VarChar(2000)
+  isRecommended  Boolean     @default(false) @map("is_recommended")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @default(now()) @updatedAt @map("updated_at")
+  subCategoryId  Int         @map("sub_category_id")
+  SubCategory    SubCategory @relation(fields: [subCategoryId], references: [id])
 
   ProductImage            ProductImage[]
   ProductColorImage       ProductColorImage[]
