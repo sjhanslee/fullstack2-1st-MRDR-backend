@@ -9,3 +9,174 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model TypeCategory {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  MainCategory MainCategory[]
+  @@map("type_categories")
+}
+
+model MainCategory {
+  id             Int          @id @default(autoincrement())
+  name           String
+  typeCategoryId Int          @map("type_category_id")
+  TypeCategory   TypeCategory @relation(fields: [typeCategoryId], references: [id])
+
+  SubCategory SubCategory[]
+  @@map("main_categories")
+}
+
+model SubCategory {
+  id             Int          @id @default(autoincrement())
+  name           String
+  mainCategoryId Int          @map("main_category_id")
+  MainCategory   MainCategory @relation(fields: [mainCategoryId], references: [id])
+
+  Product Product[]
+  @@map("sub_categories")
+}
+
+model Product {
+  id             Int         @id @default(autoincrement())
+  name           String
+  price          Float
+  salePrice      Float?      @map("sale_price")
+  detailImageUrl String      @map("detail_image_url") @db.VarChar(2000)
+  isRecommended  Boolean     @default(false) @map("is_recommended")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @default(now()) @updatedAt @map("updated_at")
+  subCategoryId  Int         @map("sub_category_id")
+  SubCategory    SubCategory @relation(fields: [subCategoryId], references: [id])
+
+  ProductImage            ProductImage[]
+  ProductColorImage       ProductColorImage[]
+  ProductColorDetailImage ProductColorDetailImage[]
+  ProductSize             ProductSize[]
+  Amount                  Amount[]
+  Cart                    Cart[]
+  @@map("products")
+}
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String  @map("image_url") @db.VarChar(2000)
+  productId Int     @map("product_id")
+  Product   Product @relation(fields: [productId], references: [id])
+
+  @@map("product_images")
+}
+
+model Color {
+  id      Int    @id @default(autoincrement())
+  name    String
+  hexCode String @map("hex_code")
+
+  ProductColorImage       ProductColorImage[]
+  ProductColorDetailImage ProductColorDetailImage[]
+  Amount                  Amount[]
+  Cart                    Cart[]
+  @@map("colors")
+}
+
+model ProductColorImage {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String  @map("image_url") @db.VarChar(2000)
+  productId Int     @map("product_id")
+  colorId   Int     @map("color_id")
+  Product   Product @relation(fields: [productId], references: [id])
+  Color     Color   @relation(fields: [colorId], references: [id])
+
+  @@map("product_color_images")
+}
+
+model ProductColorDetailImage {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String  @map("image_url") @db.VarChar(2000)
+  productId Int     @map("product_id")
+  colorId   Int     @map("color_id")
+  Product   Product @relation(fields: [productId], references: [id])
+  Color     Color   @relation(fields: [colorId], references: [id])
+
+  @@map("product_color_detail_images")
+}
+
+model Size {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  ProductSize ProductSize[]
+  Amount      Amount[]
+  Cart        Cart[]
+  @@map("sizes")
+}
+
+model ProductSize {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  sizeId    Int     @map("size_id")
+  Product   Product @relation(fields: [productId], references: [id])
+  Size      Size    @relation(fields: [sizeId], references: [id])
+
+  @@map("product_sizes")
+}
+
+model Amount {
+  id        Int     @id @default(autoincrement())
+  amount    Int     @default(0)
+  productId Int     @map("product_id")
+  colorId   Int     @map("color_id")
+  sizeId    Int     @map("size_id")
+  Product   Product @relation(fields: [productId], references: [id])
+  Color     Color   @relation(fields: [colorId], references: [id])
+  Size      Size    @relation(fields: [sizeId], references: [id])
+
+  Cart Cart[]
+  @@map("amounts")
+}
+
+model User {
+  id                 Int       @id @default(autoincrement())
+  idForLogin         String    @unique @map("id_for_login")
+  password           String
+  name               String
+  birthDate          DateTime? @map("birth_date")
+  email              String
+  address            String
+  phoneNumber        String    @map("phone_number")
+  role               String
+  businessNumber     String?   @map("business_number")
+  businessType       String?   @map("business_type")
+  businessName       String?   @map("business_name")
+  foreignNumber      String?   @map("foreign_number")
+  foreignCountry     String?   @map("foregin_country")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at")
+  isDeleted          Boolean   @default(false) @map("is_deleted")
+  deletedAt          DateTime? @map("deleted_at")
+  isEmailAgreed      Boolean   @map("is_email_agreed")
+  isSnsAgreed        Boolean   @map("is_sns_agreed")
+  isPrivacyAgreed    Boolean   @map("is_privacy_agreed")
+  isTermsOfUseAgreed Boolean   @map("is_terms_of_use_agreed")
+
+  Cart Cart[]
+  @@map("users")
+}
+
+model Cart {
+  id        Int     @id @default(autoincrement())
+  count     Int
+  userId    Int     @map("user_id")
+  productId Int     @map("product_id")
+  colorId   Int     @map("color_id")
+  sizeId    Int     @map("size_id")
+  amountId  Int     @map("amount_id")
+  User      User    @relation(fields: [userId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
+  Color     Color   @relation(fields: [colorId], references: [id])
+  Size      Size    @relation(fields: [sizeId], references: [id])
+  Amount    Amount  @relation(fields: [amountId], references: [id])
+
+  @@map("carts")
+}
