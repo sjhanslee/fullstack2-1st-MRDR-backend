@@ -1,11 +1,15 @@
 import express from 'express';
+import routes from './routes';
 
 const app = express();
-const router = express.Router();
 
-router.get('/ping', (req, res, next) => {
-  res.status(200).json({ message: 'pong' });
+app.use(express.json()); // for parsing application/json (for POST, PUT, etc. stuff with req.body)
+app.use(routes);
+
+app.use((err, req, res, next) => {
+  const { status, message } = err;
+  console.error('ERROR HANDLER', err);
+  res.status(status || 500).json({ message });
 });
-app.use(router);
 
 export default app;

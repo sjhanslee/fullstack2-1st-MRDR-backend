@@ -1,6 +1,6 @@
 import http from 'http';
-import app from './app';
 import dotenv from 'dotenv';
+import app from './app';
 
 const server = http.createServer(app);
 
