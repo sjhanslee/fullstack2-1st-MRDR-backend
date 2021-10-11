@@ -1,4 +1,5 @@
 import express from 'express';
+import './dataUploader/dataUploader';
 
 const app = express();
 const router = express.Router();
@@ -9,7 +10,5 @@ router.get('/ping', (req, res, next) => {
   res.status(200).json({ message: 'pong' });
 });
 app.use(router);
-
-import './dataUploader/dataUploader';
 
 export default app;

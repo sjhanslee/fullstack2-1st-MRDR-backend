@@ -18,13 +18,22 @@ const files = [
 
 for (let file of files) {
   const body = fs.createReadStream(`dataUploader/${file}.csv`);
-  body.pipe(csv()).on('data', async (data) => {
-    try {
-      await funcs[file](data);
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  body
+    .pipe(csv())
+    .on('data', async (data) => {
+      try {
+        await funcs[file](data);
+      } catch (e) {
+        console.log(`${file}데이터 입력 중에 오류가 발생했습니다.`);
+        console.log(e);
+      }
+    })
+    .on('end', async () => {
+      console.log(
+        `${file}데이터 입력이 끝났습니다. app.js 에서 data.uploader 임포트 부분을 삭제하면 다시 실행되지 않습니다.`
+      );
+      prisma.$disconnect();
+    });
 }
 
 const funcs = {
