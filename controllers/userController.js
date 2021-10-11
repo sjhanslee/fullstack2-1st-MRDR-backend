@@ -1,5 +1,17 @@
 import { userService } from '../services';
 
+const getAllUsers = async (req, res) => {
+  try {
+    const response = await userService.getAllUsers(req.user);
+    if (!response) {
+      return res.status(403).send({ message: 'NO ACCESS FOR USERS' });
+    }
+    res.status(200).json({ message: response });
+  } catch (error) {
+    console.log('CONTROLLER error:', error);
+  }
+};
+
 const loginUser = async (req, res) => {
   // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
   const userInfo = {
@@ -20,4 +32,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-export default { loginUser };
+export default { getAllUsers, loginUser };

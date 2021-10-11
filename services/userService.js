@@ -6,6 +6,14 @@ import { userDao } from '../models';
 dotenv.config();
 const { ACCESS_TOKEN_SECRET_KEY } = process.env;
 
+const getAllUsers = async (user) => {
+  if (user.role === 'admin') {
+    return await userDao.getAllUsers();
+  } else {
+    return false;
+  }
+};
+
 const loginUser = async (userInfo) => {
   const { username, password } = userInfo;
 
@@ -27,4 +35,4 @@ const loginUser = async (userInfo) => {
   }
 };
 
-export default { loginUser };
+export default { getAllUsers, loginUser };
