@@ -20,10 +20,10 @@
   "homepage": "https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend#readme",
   "dependencies": {
     "@prisma/client": "^3.1.1",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "bcryptjs": "^2.4.3"
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
