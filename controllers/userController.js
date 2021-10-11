@@ -1,39 +1,23 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { userService } from '../services';
 
-dotenv.config();
-const { ACCESS_TOKEN_SECRET_KEY } = process.env;
-
 const loginUser = async (req, res) => {
+  // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
   const userInfo = {
-    username: 'hanslee',
-    password: '123s45',
+    username: 'morndarn',
+    password: 'idontknosw',
   };
-  // REPLACE userInfo with req.body !!!
-  const { username, password } = userInfo;
-
-  const user = await userService.loginUser(username);
-
-  if (!user) return res.status(400).send({ message: 'CANNOT FIND USER' });
 
   try {
-    const isCorrectPw = await bcrypt.compare(password, user.password);
+    const response = await userService.loginUser(userInfo);
 
-    if (isCorrectPw) {
-      const accessToken = jwt.sign({ id: user.id }, ACCESS_TOKEN_SECRET_KEY, {
-        expiresIn: '1h',
-      });
-      res.status(200).send({ message: 'LOGIN SUCCESS', accessToken });
+    if (!response) {
+      res.status(400).send({ message: 'USERNAME OR PASSWORD IS INCORRECT' });
     } else {
-      res.status(400).send({ message: 'WRONG PASSWORD' });
+      res.status(200).send({ message: 'LOGIN SUCCESS', accessToken: response });
     }
   } catch (error) {
-    console.log('Backend messed up 500');
     res.status(500).send({ message: error.message });
   }
-  // authentication logic here?
 };
 
 export default { loginUser };
