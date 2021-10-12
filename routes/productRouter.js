@@ -4,12 +4,11 @@ import {
   getProductImages,
   getProductColors,
 } from '../controllers/procudtControllers';
-import { catchErrorMiddleWare } from '../middlewares/catchErrorMiddleWare';
+import { catchErrorWrapper } from '../utils/error';
 
 const productRouter = express.Router();
 
-productRouter.get('/:id/images', catchErrorMiddleWare(getProductImages));
-productRouter.get('/:id/colors', catchErrorMiddleWare(getProductColors));
-productRouter.get('/:id', catchErrorMiddleWare(getProductDetail));
+productRouter.get('/:id/colors', catchErrorWrapper(getProductColors));
+productRouter.get('/:id', catchErrorWrapper(getProductDetail));
 
 export default productRouter;

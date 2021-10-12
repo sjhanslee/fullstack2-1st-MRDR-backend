@@ -5,10 +5,12 @@ import {
   getProductImages,
   getProductDetailColorImages,
 } from '../models/productDetailDao';
+import { makeError } from '../utils/error';
 
 export const getProductDetailService = async (id) => {
   const isProductExist = await productExist(id);
-  if (!isProductExist.length) throw Error('없는 상품입니다.');
+  if (!isProductExist.length) throw makeError(404, '없는 상품입니다.');
+
   const productDetail = await getProductDetail(id);
 
   let colors = [];
