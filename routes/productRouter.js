@@ -4,10 +4,10 @@ import { validateProductQueryParams } from '../middlewares/paramValidation';
 
 const productRouter = express.Router();
 
-productRouter.get('/', validateProductQueryParams, (req, res, next) => {
-  !req.query.typeNum
-    ? productController.getAllproducts(req, res, next)
-    : productController.getProductsByType(req, res, next);
-});
+productRouter.get(
+  '/',
+  validateProductQueryParams,
+  productController.getAllproducts
+);
 
 export default productRouter;

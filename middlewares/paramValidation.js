@@ -1,4 +1,8 @@
-const QUERY_PARAMS = { typeNum: [], price: [] };
+const QUERY_PARAMS = {
+  typeNum: 'typeNum',
+  price: 'price',
+  productName: 'productName',
+};
 
 const validateProductQueryParams = (req, res, next) => {
   try {
