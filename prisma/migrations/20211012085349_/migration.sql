@@ -30,6 +30,7 @@ CREATE TABLE `products` (
     `name` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
     `sale_price` DOUBLE,
+    `detail_image_url` VARCHAR(2000) NOT NULL,
     `is_recommended` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -57,9 +58,8 @@ CREATE TABLE `colors` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `product_color_images` (
+CREATE TABLE `product_colors` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `image_url` VARCHAR(2000) NOT NULL,
     `product_id` INTEGER NOT NULL,
     `color_id` INTEGER NOT NULL,
 
@@ -67,11 +67,19 @@ CREATE TABLE `product_color_images` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `product_color_detail_images` (
+CREATE TABLE `product_color_images` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `image_url` VARCHAR(2000) NOT NULL,
-    `product_id` INTEGER NOT NULL,
-    `color_id` INTEGER NOT NULL,
+    `image_type_id` INTEGER NOT NULL,
+    `product_color_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `image_types` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -94,12 +102,20 @@ CREATE TABLE `product_sizes` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `amounts` (
+CREATE TABLE `product_options` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `amount` INTEGER NOT NULL DEFAULT 0,
     `product_id` INTEGER NOT NULL,
     `color_id` INTEGER NOT NULL,
     `size_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `stocks` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `amount` INTEGER NOT NULL,
+    `product_option_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -138,10 +154,7 @@ CREATE TABLE `carts` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `count` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
-    `product_id` INTEGER NOT NULL,
-    `color_id` INTEGER NOT NULL,
-    `size_id` INTEGER NOT NULL,
-    `amount_id` INTEGER NOT NULL,
+    `product_option_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -159,16 +172,16 @@ ALTER TABLE `products` ADD CONSTRAINT `products_sub_category_id_fkey` FOREIGN KE
 ALTER TABLE `product_images` ADD CONSTRAINT `product_images_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `product_color_images` ADD CONSTRAINT `product_color_images_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_colors` ADD CONSTRAINT `product_colors_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `product_color_images` ADD CONSTRAINT `product_color_images_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_colors` ADD CONSTRAINT `product_colors_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `product_color_detail_images` ADD CONSTRAINT `product_color_detail_images_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_color_images` ADD CONSTRAINT `product_color_images_product_color_id_fkey` FOREIGN KEY (`product_color_id`) REFERENCES `product_colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `product_color_detail_images` ADD CONSTRAINT `product_color_detail_images_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_color_images` ADD CONSTRAINT `product_color_images_image_type_id_fkey` FOREIGN KEY (`image_type_id`) REFERENCES `image_types`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `product_sizes` ADD CONSTRAINT `product_sizes_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -177,25 +190,19 @@ ALTER TABLE `product_sizes` ADD CONSTRAINT `product_sizes_product_id_fkey` FOREI
 ALTER TABLE `product_sizes` ADD CONSTRAINT `product_sizes_size_id_fkey` FOREIGN KEY (`size_id`) REFERENCES `sizes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `amounts` ADD CONSTRAINT `amounts_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_options` ADD CONSTRAINT `product_options_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `amounts` ADD CONSTRAINT `amounts_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_options` ADD CONSTRAINT `product_options_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `amounts` ADD CONSTRAINT `amounts_size_id_fkey` FOREIGN KEY (`size_id`) REFERENCES `sizes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `product_options` ADD CONSTRAINT `product_options_size_id_fkey` FOREIGN KEY (`size_id`) REFERENCES `sizes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `stocks` ADD CONSTRAINT `stocks_product_option_id_fkey` FOREIGN KEY (`product_option_id`) REFERENCES `product_options`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `carts` ADD CONSTRAINT `carts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `carts` ADD CONSTRAINT `carts_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `carts` ADD CONSTRAINT `carts_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `colors`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `carts` ADD CONSTRAINT `carts_size_id_fkey` FOREIGN KEY (`size_id`) REFERENCES `sizes`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `carts` ADD CONSTRAINT `carts_amount_id_fkey` FOREIGN KEY (`amount_id`) REFERENCES `amounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `carts` ADD CONSTRAINT `carts_product_option_id_fkey` FOREIGN KEY (`product_option_id`) REFERENCES `product_options`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
