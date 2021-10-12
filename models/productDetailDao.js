@@ -18,26 +18,16 @@ export const getProductDetailColorImages = (id) => {
           c.id,
           c.name colorName,
           c.hex_code colorHexCode,
-          JSON_ARRAYAGG(i.image_url) imageUrlList 
+          JSON_ARRAYAGG(
+          pi.image_url
+        ) imageUrlList 
         FROM 
           colors c
-        JOIN product_color_detail_images id ON id.product_id='1'
-        JOIN product_color_images i ON i.product_id=id.color_id
-        GROUP BY c.id
+        JOIN product_colors pc ON pc.product_id=${id}
+        JOIN product_color_images pi ON pi.product_color_id = pc.id AND pi.image_type_id='1'
+        JOIN image_types it ON it.id = pi.image_type_id
+        GROUP BY c.id 
         ORDER BY c.id ASC;
-    `;
-};
-
-export const getProductImages = (id) => {
-  return prisma.$queryRaw`
-        SELECT
-          id,
-          image_url 
-        FROM
-          product_images 
-        WHERE
-          product_id=${id}
-        ORDER BY id ASC;
     `;
 };
 
@@ -51,30 +41,33 @@ export const getProductDetail = (id) => {
          JSON_ARRAYAGG(
             JSON_OBJECT(
                 'id',c.id,
-                'name',c.name,
-                'img',i.image_url
+                'name',c.name
             ) 
          ) colors
          FROM products p
-         JOIN product_color_images i ON i.product_id=p.id
-         JOIN colors c ON c.id=i.color_id 
-         WHERE p.id='1'
+         JOIN product_colors pc ON pc.product_id=p.id
+         JOIN colors c ON c.id=pc.color_id 
+         LEFT OUTER JOIN product_color_images i ON i.product_color_id=pc.id AND i.image_type_id='2'
+         WHERE p.id=${id}
          GROUP BY p.id;
     `;
 };
 
 export const getAmountByColor = (productId, colorIds) => {
   return prisma.$queryRaw`
-        SELECT 
-          s.id,
-          s.name,
-          a.amount quantity,
-          a.color_id
-        FROM amounts a
-        JOIN sizes s ON a.size_id=s.id
-        WHERE
-          a.product_id=${productId}
-        AND
-          a.color_id in (${Prisma.join(colorIds)});
-    `;
+    SELECT DISTINCT
+      ss.name,
+      pc.color_id,
+      st.amount
+    FROM
+      sizes ss
+    JOIN product_sizes ps ON ps.size_id=ss.id
+    JOIN product_colors pc ON pc.color_id in (${Prisma.join(colorIds)})
+    LEFT OUTER JOIN product_options po ON po.size_id=ss.id AND po.color_id in (${Prisma.join(
+      colorIds
+    )})
+    LEFT OUTER JOIN stocks st ON st.product_option_id=po.id
+    WHERE 
+     ps.product_id=${productId};
+  `;
 };

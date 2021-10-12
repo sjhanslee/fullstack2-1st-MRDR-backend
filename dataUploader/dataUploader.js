@@ -8,12 +8,15 @@ const files = [
   'typeCategory',
   'mainCategory',
   'subCategory',
-  'product',
-  'amount',
-  'productSize',
-  'productImage',
-  'productColorImage',
-  'productColorDetailImage',
+  'product_options',
+  // 'product',
+  // 'stock',
+  // 'productSize',
+  // 'newProductColor',
+  // 'newProductDetail',
+  // 'productColor',
+  // 'productColorImage',
+  // 'productColorDetailImage',
 ];
 
 for (let file of files) {
@@ -37,6 +40,68 @@ for (let file of files) {
 }
 
 const funcs = {
+  newProductColor: async ({ image_url, image_type_id, product_color_id }) => {
+    await prisma.$queryRaw`
+      INSERT INTO
+        product_color_images(
+          image_url,
+          image_type_id,
+          product_color_id
+        )
+      VALUES(
+        ${image_url},
+        ${image_type_id},
+        ${product_color_id}
+      );
+      
+
+    `;
+  },
+  productColor: async ({ product_id, color_id }) => {
+    console.log(product_id, color_id);
+    await prisma.$queryRaw`
+        INSERT INTO
+          product_colors(
+            product_id,
+            color_id
+          )
+        VALUES(
+          ${product_id},
+          ${color_id}
+        );
+      `;
+  },
+
+  product_options: async ({ product_id, color_id, size_id }) => {
+    const isExist = await prisma.$queryRaw`
+      SELECT
+        id
+      FROM
+        product_options
+      WHERE
+        product_id=${product_id}
+      AND
+        color_id=${color_id}
+      AND
+        size_id=${size_id};
+    `;
+
+    if (!isExist.length) {
+      await prisma.$queryRaw`
+        INSERT INTO
+          product_options(
+            product_id,
+            color_id,
+            size_id
+          )
+        VALUES(
+          ${product_id},
+          ${color_id},
+          ${size_id}
+        );    
+      `;
+    }
+  },
   productColorDetailImage: async ({ image_url, product_id, color_id }) => {
     const productColorDetailImagesExist = await prisma.$queryRaw`
       SELECT 
@@ -150,33 +215,25 @@ const funcs = {
       `;
     }
   },
-  amount: async ({ amount, product_id, color_id, size_id }) => {
+  stock: async ({ amount, product_option_id }) => {
     const isAmountExist = await prisma.$queryRaw`
       SELECT
         id
       FROM 
-        amounts
+        stocks
       WHERE
-        product_id=${product_id}
-      AND
-        color_id=${color_id}
-      AND
-        size_id=${size_id};
+        product_option_id=${product_option_id};
     `;
     if (!isAmountExist.length) {
       await prisma.$queryRaw`
         INSERT INTO
-          amounts(
+          stocks(
             amount,
-            product_id,
-            color_id,
-            size_id
+            product_option_id
           )
         VALUES(
           ${amount},
-          ${product_id},
-          ${color_id},
-          ${size_id}
+          ${product_option_id}
         );
       `;
     }
