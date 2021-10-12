@@ -16,10 +16,24 @@ const createUser = async (req, res) => {
       isTermsOfUseAgreed,
     } = req.body;
 
-    const values = Object.values(req.body);
-    const keys = Object.keys(req.body);
+    const essentialInfo = {
+      idForLogin,
+      name,
+      password,
+      email,
+      address,
+      phoneNumber,
+      role,
+      isEmailAgreed,
+      isSnsAgreed,
+      isPrivacyAgreed,
+      isTermsOfUseAgreed,
+    };
+
+    const values = Object.values(essentialInfo);
+    const keys = Object.keys(essentialInfo);
     const emptyInfo = keys.filter((key) => {
-      return req.body[key] === '';
+      return essentialInfo[key] === '';
     });
 
     if (values.includes('')) {
@@ -27,20 +41,9 @@ const createUser = async (req, res) => {
       err.statusCode = 400;
       throw err;
     } else {
-      await userService.createUser(
-        idForLogin,
-        name,
-        password,
-        req.body.birthDate,
-        email,
-        address,
-        phoneNumber,
-        role,
-        isEmailAgreed,
-        isSnsAgreed,
-        isPrivacyAgreed,
-        isTermsOfUseAgreed
-      );
+      essentialInfo.birthDate = req.body.birthDate;
+      const memberInfo = essentialInfo;
+      await userService.createUser(memberInfo);
       res.status(201).json({ message: 'SUCCESS' });
     }
   } catch (err) {
