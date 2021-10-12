@@ -2,6 +2,7 @@ import { userService } from '../services';
 
 const createUser = async (req, res) => {
   try {
+    const userAllInfo = req.body;
     const {
       idForLogin,
       name,
@@ -41,13 +42,11 @@ const createUser = async (req, res) => {
       err.statusCode = 400;
       throw err;
     } else {
-      essentialInfo.birthDate = req.body.birthDate;
-      const memberInfo = essentialInfo;
-      await userService.createUser(memberInfo);
+      await userService.createUser(userAllInfo);
       res.status(201).json({ message: 'SUCCESS' });
+      return;
     }
   } catch (err) {
-    console.log(err);
     res.status(err.statusCode || 500).json({ message: err.message });
   }
 };

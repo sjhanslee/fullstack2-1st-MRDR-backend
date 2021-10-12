@@ -1,6 +1,6 @@
 import prisma from '../prisma';
 
-const userId = async (idForLogin) => {
+const getUserId = async (idForLogin) => {
   return await prisma.$queryRaw`
    SELECT 
     id_for_login  
@@ -11,7 +11,7 @@ const userId = async (idForLogin) => {
   `;
 };
 
-const createUser = async (memberInfo) => {
+const createUser = async (userAllInfo) => {
   const {
     idForLogin,
     name,
@@ -25,7 +25,7 @@ const createUser = async (memberInfo) => {
     isSnsAgreed,
     isPrivacyAgreed,
     isTermsOfUseAgreed,
-  } = memberInfo;
+  } = userAllInfo;
   return await prisma.$queryRaw`
     INSERT INTO 
       users(
@@ -59,4 +59,4 @@ const createUser = async (memberInfo) => {
       `;
 };
 
-export default { userId, createUser };
+export default { getUserId, createUser };
