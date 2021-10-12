@@ -50,12 +50,10 @@ model Product {
   subCategoryId  Int         @map("sub_category_id")
   SubCategory    SubCategory @relation(fields: [subCategoryId], references: [id])
 
-  ProductImage            ProductImage[]
-  ProductColorImage       ProductColorImage[]
-  ProductColorDetailImage ProductColorDetailImage[]
-  ProductSize             ProductSize[]
-  Amount                  Amount[]
-  Cart                    Cart[]
+  ProductImage  ProductImage[]
+  ProductSize   ProductSize[]
+  ProductColor  ProductColor[]
+  ProductOption ProductOption[]
   @@map("products")
 }
 
@@ -73,42 +71,47 @@ model Color {
   name    String
   hexCode String @map("hex_code")
 
-  ProductColorImage       ProductColorImage[]
-  ProductColorDetailImage ProductColorDetailImage[]
-  Amount                  Amount[]
-  Cart                    Cart[]
+  ProductColor  ProductColor[]
+  ProductOption ProductOption[]
   @@map("colors")
 }
 
-model ProductColorImage {
+model ProductColor {
   id        Int     @id @default(autoincrement())
-  imageUrl  String  @map("image_url") @db.VarChar(2000)
   productId Int     @map("product_id")
   colorId   Int     @map("color_id")
   Product   Product @relation(fields: [productId], references: [id])
   Color     Color   @relation(fields: [colorId], references: [id])
+
+  ProductColorImage ProductColorImage[]
+  @@map("product_colors")
+}
+
+model ProductColorImage {
+  id             Int          @id @default(autoincrement())
+  imageUrl       String       @map("image_url") @db.VarChar(2000)
+  imageTypeId    Int          @map("image_type_id")
+  productColorId Int          @map("product_color_id")
+  ProductColor   ProductColor @relation(fields: [productColorId], references: [id])
+  ImageType      ImageType    @relation(fields: [imageTypeId], references: [id])
 
   @@map("product_color_images")
 }
 
-model ProductColorDetailImage {
-  id        Int     @id @default(autoincrement())
-  imageUrl  String  @map("image_url") @db.VarChar(2000)
-  productId Int     @map("product_id")
-  colorId   Int     @map("color_id")
-  Product   Product @relation(fields: [productId], references: [id])
-  Color     Color   @relation(fields: [colorId], references: [id])
+model ImageType {
+  id   Int    @id @default(autoincrement())
+  name String
 
-  @@map("product_color_detail_images")
+  ProductColorImage ProductColorImage[]
+  @@map("image_types")
 }
 
 model Size {
   id   Int    @id @default(autoincrement())
   name String
 
-  ProductSize ProductSize[]
-  Amount      Amount[]
-  Cart        Cart[]
+  ProductSize   ProductSize[]
+  ProductOption ProductOption[]
   @@map("sizes")
 }
 
@@ -122,9 +125,8 @@ model ProductSize {
   @@map("product_sizes")
 }
 
-model Amount {
+model ProductOption {
   id        Int     @id @default(autoincrement())
-  amount    Int     @default(0)
   productId Int     @map("product_id")
   colorId   Int     @map("color_id")
   sizeId    Int     @map("size_id")
@@ -132,8 +134,18 @@ model Amount {
   Color     Color   @relation(fields: [colorId], references: [id])
   Size      Size    @relation(fields: [sizeId], references: [id])
 
-  Cart Cart[]
-  @@map("amounts")
+  Cart  Cart[]
+  Stock Stock[]
+  @@map("product_options")
+}
+
+model Stock {
+  id              Int           @id @default(autoincrement())
+  amount          Int
+  productOptionId Int           @map("product_option_id")
+  ProductOption   ProductOption @relation(fields: [productOptionId], references: [id])
+
+  @@map("stocks")
 }
 
 model User {
@@ -165,18 +177,12 @@ model User {
 }
 
 model Cart {
-  id        Int     @id @default(autoincrement())
-  count     Int
-  userId    Int     @map("user_id")
-  productId Int     @map("product_id")
-  colorId   Int     @map("color_id")
-  sizeId    Int     @map("size_id")
-  amountId  Int     @map("amount_id")
-  User      User    @relation(fields: [userId], references: [id])
-  Product   Product @relation(fields: [productId], references: [id])
-  Color     Color   @relation(fields: [colorId], references: [id])
-  Size      Size    @relation(fields: [sizeId], references: [id])
-  Amount    Amount  @relation(fields: [amountId], references: [id])
+  id              Int           @id @default(autoincrement())
+  count           Int
+  userId          Int           @map("user_id")
+  productOptionId Int           @map("product_option_id")
+  User            User          @relation(fields: [userId], references: [id])
+  ProductOption   ProductOption @relation(fields: [productOptionId], references: [id])
 
   @@map("carts")
 }
