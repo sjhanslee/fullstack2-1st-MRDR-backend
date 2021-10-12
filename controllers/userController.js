@@ -2,33 +2,27 @@ import { userService } from '../services';
 
 const getAllUsers = async (req, res) => {
   try {
-    const response = await userService.getAllUsers(req.user);
-    if (!response) {
-      return res.status(403).send({ message: 'NO ACCESS FOR USERS' });
-    }
-    res.status(200).json({ message: response });
+    const allUsers = await userService.getAllUsers(req.user.role);
+
+    res.status(200).json({ message: 'GOT ALL USERS', users: allUsers });
   } catch (error) {
-    console.log('CONTROLLER error:', error);
+    return res.status(403).send({ message: error.message });
   }
 };
 
 const loginUser = async (req, res) => {
   // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
-  const userInfo = {
-    username: 'morndarn',
-    password: 'idontknosw',
+  const userInput = {
+    idInput: 'hanslee',
+    pwInput: '12345',
   };
 
   try {
-    const response = await userService.loginUser(userInfo);
+    const accessToken = await userService.loginUser(userInput);
 
-    if (!response) {
-      res.status(400).send({ message: 'USERNAME OR PASSWORD IS INCORRECT' });
-    } else {
-      res.status(200).send({ message: 'LOGIN SUCCESS', accessToken: response });
-    }
+    res.status(200).send({ message: 'LOGIN SUCCESS', accessToken }); //status(201)로 바꿔야할지? (토큰 생성)
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(400).send({ message: error.message });
   }
 };
 

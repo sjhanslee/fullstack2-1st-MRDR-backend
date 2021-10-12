@@ -6,27 +6,23 @@ import { userDao } from '../models';
 dotenv.config();
 const { ACCESS_TOKEN_SECRET_KEY } = process.env;
 
-const getAllUsers = async (user) => {
-  if (user.role !== 'admin') return;
+const getAllUsers = async (userRole) => {
+  if (userRole !== 'admin') throw Error('NOT ADMIN');
 
   return await userDao.getAllUsers();
 };
 
-const loginUser = async (userInfo) => {
-  const { username, password } = userInfo;
-  const user = await userDao.getUser(username);
+const loginUser = async ({ idInput, pwInput }) => {
+  const existingUser = await userDao.getUsername(idInput);
+  if (!existingUser) throw Error('CANNOT FIND USER');
 
-  if (!user) return;
+  const { id, password, role } = existingUser;
+  const isCorrectPw = await bcrypt.compare(pwInput, password);
+  if (!isCorrectPw) throw Error('INCORRECT PASSWORD');
 
-  const isCorrectPw = await bcrypt.compare(password, user.password);
-
-  if (!isCorrectPw) return;
-
-  const accessToken = jwt.sign(
-    { id: user.id, role: user.role },
-    ACCESS_TOKEN_SECRET_KEY,
-    { expiresIn: '1h' }
-  );
+  const accessToken = jwt.sign({ id, role }, ACCESS_TOKEN_SECRET_KEY, {
+    expiresIn: '12h',
+  });
   return accessToken;
 };
 
