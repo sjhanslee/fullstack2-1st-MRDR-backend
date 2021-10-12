@@ -1,6 +1,6 @@
 import express from 'express';
 import router from './routes';
-import './dataUploader/dataUploader';
+// import './dataUploader/dataUploader';
 
 const app = express();
 

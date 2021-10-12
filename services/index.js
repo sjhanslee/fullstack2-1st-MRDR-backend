@@ -1,3 +1,3 @@
-import { getAllproducts } from './productService';
+import * as productService from './productService';
 
-export { getAllproducts };
+export { productService };

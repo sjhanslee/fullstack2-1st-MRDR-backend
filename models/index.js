@@ -1,3 +1,3 @@
-import { getAllproducts } from './productDao';
+import * as productDao from './productDao';
 
-export { getAllproducts };
+export { productDao };

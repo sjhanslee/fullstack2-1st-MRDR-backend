@@ -22,6 +22,7 @@ for (let file of files) {
     .pipe(csv())
     .on('data', async (data) => {
       try {
+        console.log(file);
         await funcs[file](data);
       } catch (e) {
         console.log(`${file}데이터 입력 중에 오류가 발생했습니다.`);
@@ -276,7 +277,7 @@ const funcs = {
       );
     `;
   },
-  color: async ({ name, haxCode }) => {
+  color: async ({ name, hex_code }) => {
     const isColorExist = await prisma.$queryRaw`
       SELECT
        id
@@ -293,7 +294,7 @@ const funcs = {
           )
         VALUES(
           ${name},
-          ${haxCode}
+          ${hex_code}
         );
       `;
     }

@@ -1,3 +1,3 @@
-import { getAllproducts } from './productController';
+import * as productController from './productController';
 
-export { getAllproducts };
+export { productController };

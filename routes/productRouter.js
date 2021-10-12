@@ -1,10 +1,12 @@
 import express from 'express';
-import { getProductDetail } from '../controllers/procudtControllers';
-import { getAllproducts } from '../controllers';
+import { productController } from '../controllers';
 
 const productRouter = express.Router();
 
-productRouter.get('/', getAllproducts);
-productRouter.get('/:id', getProductDetail);
+productRouter.get('/', (req, res, next) => {
+  !req.query.typeNum
+    ? productController.getAllproducts(req, res, next)
+    : productController.getProductsByType(req, res, next);
+});
 
 export default productRouter;
