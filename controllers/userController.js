@@ -31,6 +31,7 @@ const createUser = async (req, res) => {
         idForLogin,
         name,
         password,
+        req.body.birthDate,
         email,
         address,
         phoneNumber,

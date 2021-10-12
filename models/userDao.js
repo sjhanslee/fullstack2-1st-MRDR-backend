@@ -15,6 +15,7 @@ const createUser = async (
   idForLogin,
   name,
   hashedPw,
+  birthDate,
   email,
   address,
   phoneNumber,
@@ -29,7 +30,8 @@ const createUser = async (
       users(
         id_for_login, 
         name, 
-        password, 
+        password,
+        birth_date, 
         email, 
         address,
         phone_number,
@@ -42,7 +44,8 @@ const createUser = async (
     VALUES (
       ${idForLogin}, 
       ${name},
-      ${hashedPw}, 
+      ${hashedPw},
+      ${birthDate}, 
       ${email},  
       ${address}, 
       ${role}, 
