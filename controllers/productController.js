@@ -14,7 +14,6 @@ const getAllproducts = async (req, res, next) => {
   }
 };
 
-// 해당 함수가 속한 파일 고민! error or util
 const validatePriceQueryValue = (priceVal) => {
   if (!(priceVal === 'ASC' || priceVal === 'DESC')) {
     throw {
