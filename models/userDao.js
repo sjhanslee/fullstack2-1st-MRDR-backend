@@ -1,13 +1,32 @@
 import prisma from '../prisma';
 
-const getUserId = async (idForLogin) => {
+const getUsername = async (idInput) => {
+  const [existingUser] = await prisma.$queryRaw`
+    SELECT
+      id,
+      id_for_login,
+      password,
+      role
+    FROM
+      users
+    WHERE
+      id_for_login = ${idInput};
+  `;
+
+  return existingUser;
+};
+
+const getAllUsers = async () => {
   return await prisma.$queryRaw`
-   SELECT 
-    id_for_login  
-   FROM 
-    users
-   WHERE
-    id_for_login=${idForLogin};
+    SELECT
+      id,
+      id_for_login,
+      name,
+      email,
+      role,
+      password
+    FROM
+      users;
   `;
 };
 
@@ -55,8 +74,8 @@ const createUser = async (userAllInfo) => {
       ${isSnsAgreed}, 
       ${isPrivacyAgreed}, 
       ${isTermsOfUseAgreed}
-      )
-      `;
+    )
+  `;
 };
 
-export default { getUserId, createUser };
+export default { getUsername, getAllUsers, createUser };
