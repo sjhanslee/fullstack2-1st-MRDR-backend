@@ -53,11 +53,13 @@ export const getProductDetail = (id) => {
          p.id,
          p.name,
          p.price,
-         p.sale_price,
+         p.sale_price salePrice,
+         p.detail_image_url detailImageUrl,
          JSON_ARRAYAGG(
             JSON_OBJECT(
-                'id',c.id,
-                'name',c.name
+                'id', c.id,
+                'name', c.name,
+                'img', i.image_url
             ) 
          ) colors
          FROM products p
