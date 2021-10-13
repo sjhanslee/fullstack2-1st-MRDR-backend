@@ -2,7 +2,7 @@ import express from 'express';
 import {
   getProductDetail,
   getProductColors,
-} from '../controllers/procudtControllers';
+} from '../controllers/productControllers';
 import { catchErrorWrapper } from '../utils/error';
 
 const productRouter = express.Router();
