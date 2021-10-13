@@ -15,12 +15,12 @@ const createUser = async (userAllInfo) => {
     err.statusCode = 409;
     throw err;
   }
-  const hashedPw = bcrypt.hash(password, 10);
+  const hashedPw = await bcrypt.hash(password, 10);
   userAllInfo.password = hashedPw;
   return await userDao.createUser(userAllInfo);
 };
 
-const loginUser = async ({ idInput, pwInput }) => {
+const loginUser = async ({ id: idInput, password: pwInput }) => {
   const existingUser = await userDao.getUsername(idInput);
   if (!existingUser) throw Error('로그인 실패');
 
