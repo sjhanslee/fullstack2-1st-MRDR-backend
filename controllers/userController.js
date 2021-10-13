@@ -13,7 +13,7 @@ const getAllUsers = async (req, res) => {
 const loginUser = async (req, res) => {
   // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
   const userInput = {
-    idInput: 'hanslee',
+    idInput: 'hanslese',
     pwInput: '12345',
   };
 
