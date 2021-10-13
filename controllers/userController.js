@@ -1,5 +1,71 @@
 import { userService } from '../services';
 
+const createUser = async (req, res) => {
+  try {
+    const userAllInfo = req.body;
+    const {
+      idForLogin,
+      name,
+      password,
+      email,
+      address,
+      phoneNumber,
+      role,
+      isEmailAgreed,
+      isSnsAgreed,
+      isPrivacyAgreed,
+      isTermsOfUseAgreed,
+    } = req.body;
+    const essentialInfo = {
+      idForLogin,
+      name,
+      password,
+      email,
+      address,
+      phoneNumber,
+      role,
+      isEmailAgreed,
+      isSnsAgreed,
+      isPrivacyAgreed,
+      isTermsOfUseAgreed,
+    };
+
+    const values = Object.values(essentialInfo);
+    const keys = Object.keys(essentialInfo);
+    const emptyInfo = keys.filter((key) => {
+      return essentialInfo[key] === '';
+    });
+
+    if (values.includes('')) {
+      let err = new Error(`KEY_ERROR: ${emptyInfo}`);
+      err.statusCode = 400;
+      throw err;
+    } else {
+      await userService.createUser(userAllInfo);
+      res.status(201).json({ message: 'SUCCESS' });
+      return;
+    }
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ message: err.message });
+  }
+};
+
+const loginUser = async (req, res) => {
+  // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
+  const userInput = {
+    idInput: 'hanslee',
+    pwInput: '12345s',
+  };
+
+  try {
+    const accessToken = await userService.loginUser(userInput);
+
+    res.status(200).send({ message: '로그인 성공!', accessToken }); //status(201)로 바꿔야할지? (토큰 생성)
+  } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
+};
+
 const getAllUsers = async (req, res) => {
   try {
     const allUsers = await userService.getAllUsers(req.user.role);
@@ -10,20 +76,4 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
-  const userInput = {
-    idInput: 'hanslese',
-    pwInput: '12345',
-  };
-
-  try {
-    const accessToken = await userService.loginUser(userInput);
-
-    res.status(200).send({ message: 'LOGIN SUCCESS', accessToken }); //status(201)로 바꿔야할지? (토큰 생성)
-  } catch (error) {
-    res.status(400).send({ message: error.message });
-  }
-};
-
-export default { getAllUsers, loginUser };
+export default { createUser, loginUser, getAllUsers };
