@@ -1,5 +1,43 @@
-export const productDetail = async () => {
-  //아이디에 해당하는 상품 정보를 갖고온다.
-  //상품정보를 조인시킨다(프론트에서 필요로 하는 상품 정보 형식)
-  //응답한다.
+import {
+  getAmountByColor,
+  getProductDetail,
+  productExist,
+  getProductImages,
+  getProductDetailColorImages,
+} from '../models/productDetailDao';
+import { makeError } from '../utils/error';
+
+export const getProductDetailService = async (id) => {
+  const isProductExist = await productExist(id);
+  if (!isProductExist.length) throw makeError(404, '없는 상품입니다.');
+  const productDetail = await getProductDetail(id);
+  let colors = [];
+  if ('colors' in productDetail[0]) {
+    productDetail[0].colors.forEach((v) => colors.push(v.id));
+    const amountByColor = await getAmountByColor(id, colors);
+    for (let item of productDetail[0].colors) {
+      const sizes = [];
+      for (let jtem of amountByColor) {
+        if (jtem.color_id === item.id) {
+          delete jtem.color_id;
+          sizes.push(jtem);
+        }
+      }
+      item.sizes = sizes;
+    }
+  }
+
+  return productDetail;
+};
+
+export const getProductImagesService = async (id) => {
+  const isProductExist = await productExist(id);
+  if (!isProductExist.length) throw Error('없는 상품입니다.');
+  return getProductImages(id);
+};
+
+export const getproductColorsService = async (id) => {
+  const isProductExist = await productExist(id);
+  if (!isProductExist.length) throw Error('없는 상품입니다.');
+  return getProductDetailColorImages(id);
 };
