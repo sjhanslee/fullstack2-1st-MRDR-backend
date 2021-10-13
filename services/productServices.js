@@ -12,10 +12,10 @@ export const getProductDetailService = async (id) => {
   if (!isProductExist.length) throw makeError(404, '없는 상품입니다.');
   const productDetail = await getProductDetail(id);
   let colors = [];
-  if ('colors' in productDetail[0]) {
-    productDetail[0].colors.forEach((v) => colors.push(v.id));
+  if ('colors' in productDetail) {
+    productDetail.colors.forEach((v) => colors.push(v.id));
     const amountByColor = await getAmountByColor(id, colors);
-    for (let item of productDetail[0].colors) {
+    for (let item of productDetail.colors) {
       const sizes = [];
       for (let jtem of amountByColor) {
         if (jtem.color_id === item.id) {

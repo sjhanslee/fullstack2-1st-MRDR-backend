@@ -48,7 +48,7 @@ export const getProductDetailColorImages = (id) => {
 };
 
 export const getProductDetail = (id) => {
-  return prisma.$queryRaw`
+  const [productDetail] = prisma.$queryRaw`
        SELECT
          p.id,
          p.name,
@@ -67,6 +67,7 @@ export const getProductDetail = (id) => {
          WHERE p.id=${id}
          GROUP BY p.id;
     `;
+  return productDetail;
 };
 
 export const getAmountByColor = (productId, colorIds) => {
