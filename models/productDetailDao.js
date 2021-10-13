@@ -12,22 +12,38 @@ export const productExist = (id) => {
     `;
 };
 
-export const getProductDetailColorImages = (id) => {
+export const getProductImages = (id) => {
   return prisma.$queryRaw`
         SELECT 
-          c.id,
-          c.name colorName,
-          c.hex_code colorHexCode,
-          JSON_ARRAYAGG(
-          pi.image_url
-        ) imageUrlList 
+        id, 
+        image_url imageUrl 
+        FROM product_images 
+        WHERE product_id = ${id}
+  `;
+};
+
+export const getProductDetailColorImages = (id) => {
+  return prisma.$queryRaw`
+        SELECT
+        pc.id,
+        c.name colorName,
+        c.hex_code colorHexCode,
+        JSON_ARRAYAGG(pci.image_url) imageUrlList 
         FROM 
-          colors c
-        JOIN product_colors pc ON pc.product_id=${id}
-        JOIN product_color_images pi ON pi.product_color_id = pc.id AND pi.image_type_id='1'
-        JOIN image_types it ON it.id = pi.image_type_id
-        GROUP BY c.id 
-        ORDER BY c.id ASC;
+        product_colors pc 
+        LEFT JOIN colors c 
+        ON pc.color_id = c.id 
+        LEFT OUTER JOIN (
+          SELECT 
+          image_url, 
+          product_color_id
+          FROM product_color_images  
+          WHERE image_type_id = '2'
+        ) pci 
+        ON pc.id = pci.product_color_id 
+        WHERE pc.product_id = ${id} 
+        GROUP BY pc.id 
+        ORDER BY pc.id;
     `;
 };
 
@@ -47,7 +63,7 @@ export const getProductDetail = (id) => {
          FROM products p
          JOIN product_colors pc ON pc.product_id=p.id
          JOIN colors c ON c.id=pc.color_id 
-         LEFT OUTER JOIN product_color_images i ON i.product_color_id=pc.id AND i.image_type_id='2'
+         LEFT OUTER JOIN product_color_images i ON i.product_color_id=pc.id AND i.image_type_id='1'
          WHERE p.id=${id}
          GROUP BY p.id;
     `;

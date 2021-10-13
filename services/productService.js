@@ -1,13 +1,13 @@
 import { productDao } from '../models';
 
-const getAllproducts = async (params) => {
+const getAllProducts = async (params) => {
   const { typeNum } = params;
   if (typeNum) {
     if (!(await getTypeCategory(typeNum))) {
       throw { status: 404, message: 'NOT_FOUND_CATEGORY' };
     }
   }
-  const products = await productDao.getAllproducts(params);
+  const products = await productDao.getAllProducts(params);
   changeImageUrlsToArr(products);
   return products;
 };
@@ -18,10 +18,10 @@ const getTypeCategory = async (typeNum) => {
 
 const changeImageUrlsToArr = (products) => {
   for (let product of products) {
-    let { image_urls } = product;
-    image_urls = image_urls ? image_urls.split(',') : [];
-    product.image_urls = image_urls;
+    let { imageUrlList } = product;
+    imageUrlList = imageUrlList ? imageUrlList.split(',') : [];
+    product.imageUrlList = imageUrlList;
   }
 };
 
-export { getAllproducts, getTypeCategory };
+export { getAllProducts, getTypeCategory };
