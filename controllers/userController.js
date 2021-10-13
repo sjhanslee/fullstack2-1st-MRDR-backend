@@ -51,14 +51,8 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  // 임시적으로 만든 object -> 나중에 req.body로 대체할 예정
-  const userInput = {
-    idInput: 'hanslee',
-    pwInput: '12345s',
-  };
-
   try {
-    const accessToken = await userService.loginUser(userInput);
+    const accessToken = await userService.loginUser(req.body);
 
     res.status(200).send({ message: '로그인 성공!', accessToken }); //status(201)로 바꿔야할지? (토큰 생성)
   } catch (error) {
