@@ -1,7 +1,6 @@
 import express from 'express';
 import {
   getProductDetail,
-  getProductImages,
   getProductColors,
 } from '../controllers/procudtControllers';
 import { catchErrorWrapper } from '../utils/error';
