@@ -20,7 +20,10 @@
   "homepage": "https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend#readme",
   "dependencies": {
     "@prisma/client": "^3.1.1",
+    "axios": "^0.22.0",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "csv-write-stream": "^2.0.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1"
@@ -34,5 +37,8 @@
     "nodemon": "^2.0.13",
     "prettier": "2.4.1",
     "prisma": "^3.1.1"
+  },
+  "prisma": {
+    "seed": "node ./prisma/seed.js"
   }
 }
