@@ -1,11 +1,10 @@
 import * as cartDao from '../models/cartDao'
 
-export const createCart = async (count, user_id, product_options_id) => {
+export const createCart = async (items,user_id) => {
   try {
     return await cartDao.createCart (
-      count,
-      user_id,
-      product_options_id
+      items,
+      user_id
     );
   } catch (err) {
     console.log(err);

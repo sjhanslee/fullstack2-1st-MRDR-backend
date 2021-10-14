@@ -1,9 +1,11 @@
 import express from "express";
 import * as cartController from "../controllers/cartController";
+import { validateToken } from "../middlewares";
 
 const cartRouter= express.Router();
 
-cartRouter.post('/', cartController.createCart);
-cartRouter.get('/',cartController.getCart);
+cartRouter
+.post('/',validateToken,cartController.createCart)
+.get('/',cartController.getCart);
 
 export default cartRouter;

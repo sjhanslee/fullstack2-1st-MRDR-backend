@@ -1,19 +1,34 @@
 import prisma from '../prisma';
 import {Prisma} from '.prisma/client'
 
-export const createCart = async (count, user_id, product_options_id) => {
-  return await prisma.$queryRaw`
-  INSERT INTO
-    carts(
-      count,
-      user_id,
-      product_options_id,
-    )
-    VALUES(
-      ${count},
-      ${user_id},
-      ${product_options_id},
-    );`
+export const createCart = async (items,user_id) => {
+// items.forEach(item=>{
+//   item.user_id =parseInt(user_id),
+//   item.userId = parseInt(user_id),
+//   delete item.user_id
+
+//   item.product_option_id =parseInt(item.product_option_id),
+//   item.productOptionId = parseInt(item.product_option_id),
+//   delete item.product_option_id
+
+//   item.count = parseInt(item.count)
+// })
+
+// await prisma.cart.createMany({
+//     data:[
+//       ...items
+//   ]
+//   });
+  
+const data=await prisma.$queryRaw`
+SELECT * 
+FROM 
+  carts  
+WHERE
+  user_id='1'
+  ;
+`
+console.log(data);
 };
 
 export const getCart = async (user_id) => {
