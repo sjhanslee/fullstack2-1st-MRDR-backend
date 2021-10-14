@@ -7,8 +7,8 @@ const getAllProducts = async (params) => {
     SELECT 
       p.id, 
       p.name, 
-      p.price originPirce, 
-      p.sale_price discountedPrice, 
+      p.price originPrice, 
+      if(ifnull(p.sale_price, 0) = 0, p.price, p.sale_price) discountedPrice, 
       substring_index(
         GROUP_CONCAT(
           pi.image_url ORDER BY pi.id ASC SEPARATOR ','
@@ -37,7 +37,9 @@ const getAllProducts = async (params) => {
         : Prisma.empty
     }
     GROUP BY p.id 
-    ORDER BY p.price ${price === 'ASC' ? Prisma.sql`ASC` : Prisma.sql`DESC`};`;
+    ORDER BY discountedPrice ${
+      price === 'ASC' ? Prisma.sql`ASC` : Prisma.sql`DESC`
+    };`;
 };
 
 const getTypeCategory = async (typeNum) => {
