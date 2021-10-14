@@ -14,6 +14,15 @@ const getAllProducts = async (req, res, next) => {
   }
 };
 
+const getRecommendedProducts = async (req, res, next) => {
+  try {
+    const products = await productService.getRecommendedProducts();
+    res.status(200).json({ products });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const validatePriceQueryValue = (priceVal) => {
   if (!(priceVal === 'ASC' || priceVal === 'DESC')) {
     throw {
@@ -23,4 +32,4 @@ const validatePriceQueryValue = (priceVal) => {
   }
 };
 
-export { getAllProducts };
+export { getAllProducts, getRecommendedProducts };

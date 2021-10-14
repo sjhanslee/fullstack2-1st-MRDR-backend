@@ -1,5 +1,4 @@
 import {
-  getAmountByColor,
   getProductDetail,
   productExist,
   getProductImages,
