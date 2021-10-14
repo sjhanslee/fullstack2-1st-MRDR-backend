@@ -13,8 +13,40 @@ export const createCart = async (items,user_id) => {
 
 export const getCart = async (id) => {
   try {
-    return await cartDao.getCart (user_id)
-  } catch (err) {
+    const isCart = await cartDao.getCart (id);
+    if (!isCart) {
+      throw new Error ('404','Cart does not Exist')
+    } 
+
+    const anObj ={}
+    isCart.forEach(item=>{
+      const obj = {};
+
+      const newObj = 
+      {id:item.oid,size:item.size,color:item.color,count:item.count}
+      obj[item['oid']]=newObj;
+
+
+
+      delete item.oid;
+      delete item.size;
+      delete item.color;
+
+      const arr = Object.keys(obj).map(key=>obj[key]);
+      item.options=arr
+
+
+
+      anObj[item['id']]=item;
+
+    });
+
+    return Object.keys(anObj).map(key=>anObj[key])
+
+    
+
+    
+  }catch (err) {
     console.log(err)
   }
 };

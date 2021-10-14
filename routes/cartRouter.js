@@ -6,6 +6,6 @@ const cartRouter= express.Router();
 
 cartRouter
 .post('/',validateToken,cartController.createCart)
-.get('/',cartController.getCart);
+.get('/',validateToken,cartController.getCart);
 
 export default cartRouter;

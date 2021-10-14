@@ -15,10 +15,12 @@ export const createCart = async (req, res) => {
 };
 
 export const getCart = async (req,res) => {
+  const id = req.user.id;
   try {
     // req.user = {id}
     // const {id} = req.user
-    const cart = await cartService.getCart();
+    // const user_id = req.user.id;
+    const cart = await cartService.getCart(id);
     res.status(200).json({
       message : "SUCCESS GET",
       cart,
