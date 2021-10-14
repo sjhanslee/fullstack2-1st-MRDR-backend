@@ -15,9 +15,9 @@ productRouter.get(
   validateProductQueryParams,
   productController.getAllProducts
 );
+productRouter.get('/recommend', productController.getRecommendedProducts);
 productRouter.get('/:id/images', catchErrorWrapper(getProductImages));
 productRouter.get('/:id/colors', catchErrorWrapper(getProductColors));
 productRouter.get('/:id', catchErrorWrapper(getProductDetail));
-productRouter.get('/recommend', productController.getRecommendedProducts);
 
 export default productRouter;

@@ -43,7 +43,7 @@ const getAllProducts = async (params) => {
 };
 
 const getRecommendedProducts = async () => {
-  return prisma.$queryRaw`
+  return await prisma.$queryRaw`
     SELECT 
       p.id, 
       p.name, 
@@ -55,7 +55,7 @@ const getRecommendedProducts = async () => {
       WHERE p.id = pi.product_id 
       LIMIT 1) imageUrl 
     FROM products p 
-    WHERE p.is_recommended = 0;
+    WHERE p.is_recommended = 1;
   `;
 };
 

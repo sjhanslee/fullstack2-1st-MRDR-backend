@@ -14,7 +14,7 @@ const getAllProducts = async (params) => {
 };
 
 const getRecommendedProducts = async () => {
-  const products = await productService.getRecommendedProducts();
+  const products = await productDao.getRecommendedProducts();
   if (products.length === 0) {
     throw { status: 404, message: 'NOT_FOUND_ITEMS' };
   }
