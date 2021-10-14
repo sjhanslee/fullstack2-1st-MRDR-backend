@@ -48,45 +48,45 @@ export const getProductDetailColorImages = (id) => {
 };
 
 export const getProductDetail = (id) => {
-  const [productDetail] = prisma.$queryRaw`
-       SELECT
-         p.id,
-         p.name,
-         p.price,
-         p.sale_price salePrice,
-         p.detail_image_url detailImageUrl,
-         JSON_ARRAYAGG(
-            JSON_OBJECT(
-                'id', c.id,
-                'name', c.name,
-                'img', i.image_url
-            ) 
-         ) colors
-         FROM products p
-         JOIN product_colors pc ON pc.product_id=p.id
-         JOIN colors c ON c.id=pc.color_id 
-         LEFT OUTER JOIN product_color_images i ON i.product_color_id=pc.id AND i.image_type_id='1'
-         WHERE p.id=${id}
-         GROUP BY p.id;
+  return prisma.$queryRaw`
+        SELECT
+        p.id,
+        p.name,
+        p.price,
+        p.sale_price salePrice,
+        p.detail_image_url detailImageUrl,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+              'id', pc.id,
+              'name', c.name,
+              'img', i.image_url
+          ) 
+        ) colors
+        FROM products p
+        JOIN product_colors pc ON pc.product_id=p.id
+        JOIN colors c ON c.id=pc.color_id 
+        LEFT OUTER JOIN product_color_images i ON i.product_color_id=pc.id AND i.image_type_id='1'
+        WHERE p.id=${id}
+        GROUP BY p.id;
     `;
-  return productDetail;
 };
 
-export const getAmountByColor = (productId, colorIds) => {
+export const getOptionAmountInfos = (productId) => {
   return prisma.$queryRaw`
-    SELECT DISTINCT
-      ss.name,
-      pc.color_id,
-      st.amount
-    FROM
-      sizes ss
-    JOIN product_sizes ps ON ps.size_id=ss.id
-    JOIN product_colors pc ON pc.color_id in (${Prisma.join(colorIds)})
-    LEFT OUTER JOIN product_options po ON po.size_id=ss.id AND po.color_id in (${Prisma.join(
-      colorIds
-    )})
-    LEFT OUTER JOIN stocks st ON st.product_option_id=po.id
-    WHERE 
-     ps.product_id=${productId};
+    SELECT 
+      pc.id,
+      JSON_ARRAYAGG(
+        JSON_OBJECT(
+          'id', po.id,
+          'value', s.name,
+          'quantity', st.amount
+        )
+      ) sizes
+    FROM product_options po 
+    LEFT JOIN product_colors pc ON po.product_id = pc.product_id 
+    LEFT JOIN sizes s ON po.size_id = s.id 
+    LEFT JOIN stocks st ON po.id = st.product_option_id 
+    WHERE po.product_id = ${productId} AND pc.color_id = po.color_id
+    GROUP BY pc.id;
   `;
 };
