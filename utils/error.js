@@ -1,7 +1,7 @@
 export const catchErrorWrapper = (controller) => (req, res, next) =>
   controller(req, res, next).catch((e) => next(e));
 
-const makeError = (status, message) => {
+export const makeError = (status, message) => {
   const error = new Error(message);
   error.status = status;
   return error;

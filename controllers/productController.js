@@ -1,13 +1,22 @@
 import { productService } from '../services';
 
-const getAllproducts = async (req, res, next) => {
+const getAllProducts = async (req, res, next) => {
   try {
     const params = req.query;
     const { price } = params;
     if (price) {
       validatePriceQueryValue(price);
     }
-    const products = await productService.getAllproducts(params);
+    const products = await productService.getAllProducts(params);
+    res.status(200).json({ products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getRecommendedProducts = async (req, res, next) => {
+  try {
+    const products = await productService.getRecommendedProducts();
     res.status(200).json({ products });
   } catch (err) {
     next(err);
@@ -23,4 +32,4 @@ const validatePriceQueryValue = (priceVal) => {
   }
 };
 
-export { getAllproducts };
+export { getAllProducts, getRecommendedProducts };
