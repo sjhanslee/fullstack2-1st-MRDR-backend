@@ -7,14 +7,14 @@ const getAllProducts = async (params) => {
     SELECT 
       p.id, 
       p.name, 
-      p.price, 
-      p.sale_price salePrice, 
+      p.price originPirce, 
+      p.sale_price discountedPrice, 
       substring_index(
         GROUP_CONCAT(
           pi.image_url ORDER BY pi.id ASC SEPARATOR ','
         ), ',', 2) imageUrlList, 
       (SELECT count(*) FROM product_colors 
-      WHERE product_id = p.id ) colorCount 
+      WHERE product_id = p.id ) colorAmount 
     FROM products p 
     LEFT JOIN product_images pi 
     ON p.id = pi.product_id
