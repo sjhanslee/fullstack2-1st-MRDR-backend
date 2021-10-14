@@ -1,3 +1,4 @@
+import { productService } from '.';
 import { productDao } from '../models';
 
 const getAllProducts = async (params) => {
@@ -9,6 +10,14 @@ const getAllProducts = async (params) => {
   }
   const products = await productDao.getAllProducts(params);
   changeImageUrlsToArr(products);
+  return products;
+};
+
+const getRecommendedProducts = async () => {
+  const products = await productService.getRecommendedProducts();
+  if (products.length === 0) {
+    throw { status: 404, message: 'NOT_FOUND_ITEMS' };
+  }
   return products;
 };
 
@@ -24,4 +33,4 @@ const changeImageUrlsToArr = (products) => {
   }
 };
 
-export { getAllProducts, getTypeCategory };
+export { getAllProducts, getTypeCategory, getRecommendedProducts };

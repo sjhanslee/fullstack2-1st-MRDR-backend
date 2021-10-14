@@ -42,10 +42,27 @@ const getAllProducts = async (params) => {
     };`;
 };
 
+const getRecommendedProducts = async () => {
+  return prisma.$queryRaw`
+    SELECT 
+      p.id, 
+      p.name, 
+      p.price, 
+      p.sale_price salePrice,
+      (SELECT 
+        pi.image_url 
+      FROM product_images pi 
+      WHERE p.id = pi.product_id 
+      LIMIT 1) imageUrl 
+    FROM products p 
+    WHERE p.is_recommended = 0;
+  `;
+};
+
 const getTypeCategory = async (typeNum) => {
   const [typeCategory] = await prisma.$queryRaw`
     SELECT * FROM type_categories
     WHERE id = ${typeNum};`;
   return typeCategory;
 };
-export { getAllProducts, getTypeCategory };
+export { getAllProducts, getTypeCategory, getRecommendedProducts };
