@@ -5,7 +5,7 @@
 ## :white_check_mark: 프로젝트 개요
 
 모른다르 프로젝트는 라이프 & 스포츠 의류 쇼핑몰을 구현한 프로젝트로, 이커머스가 가진 기본적인 기능(회원가입, 상품 정보 전달, 장바구니 등)을 구현한 프로젝트입니다.
-[안다르](https://andar.co.kr/index.html) 사이트를 클론한 사이트입니다.
+[안다르](https://andar.co.kr/index.html) 사이트를 학습 목적으로 클론한 사이트입니다.
 
 - 기간 : 2021.10.01 ~ 2021.10.22 (마지막 한 주 - 리팩토링)
 - 인원 : 5명
@@ -96,13 +96,13 @@
 
 <br/>
 
-*자세한 내용은 하단의 API Documentation을 참고 부탁드립니다.🙂*
+*자세한 내용은 하단의 API WIKI을 참고 부탁드립니다.🙂*
 
 <br/>
 
-## :white_check_mark:	 API Documentation
+## :white_check_mark:	 API WIKI
 
-[모른다르 백엔드 API Documentation](https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend/wiki/%EB%AA%A8%EB%A5%B8%EB%8B%A4%EB%A5%B4-%EB%B0%B1%EC%97%94%EB%93%9C-API-Documentation)
+[모른다르 백엔드 API WIKI](https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend/wiki/%EB%AA%A8%EB%A5%B8%EB%8B%A4%EB%A5%B4-%EB%B0%B1%EC%97%94%EB%93%9C-API-Documentation)
 
 <br/>
 
