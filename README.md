@@ -33,6 +33,7 @@
 |  ORM 프레임워크  |         **Prisma**          |
 |   버전관리 툴    |       **Git, Github**       |
 |       IDE        |   **Visual Studio Code**    |
+| 커뮤니케이션       | **Slack, Notion**           |
 |      그 외       | **ESLint, Prettier, Babel** |
 
 <br/>
