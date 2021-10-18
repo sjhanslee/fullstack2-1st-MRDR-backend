@@ -102,7 +102,7 @@
 
 ## :white_check_mark:	 API WIKI
 
-[모른다르 백엔드 API WIKI](https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend/wiki/%EB%AA%A8%EB%A5%B8%EB%8B%A4%EB%A5%B4-%EB%B0%B1%EC%97%94%EB%93%9C-API-Documentation)
+[모른다르 백엔드 API WIKI](https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend/wiki/%EB%AA%A8%EB%A5%B8%EB%8B%A4%EB%A5%B4-%EB%B0%B1%EC%97%94%EB%93%9C-API-WIKI)
 
 <br/>
 
