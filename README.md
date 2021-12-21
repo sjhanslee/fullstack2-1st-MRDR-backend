@@ -9,8 +9,8 @@
 
 - 기간 : 2021.10.01 ~ 2021.10.22 (마지막 한 주 - 리팩토링)
 - 인원 : 5명
-- [프론트엔드 Gitub Repository](https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-frontend)
-- [백엔드 Github Repository](https://github.com/wecode-bootcamp-korea/fullstack2-1st-MRDR-backend)
+- [프론트엔드 GitHub Repository](https://github.com/sjhanslee/fullstack2-1st-MRDR-frontend)
+- [백엔드 GitHub Repository](https://github.com/sjhanslee/fullstack2-1st-MRDR-backend)
 
 <br/>
 
